@@ -9,7 +9,7 @@ import (
 	"log"
 	"time"
 
-	pb "git.rsglab.com/rsg/gke-services/knative-grpc-test/proto"
+	pb "../proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -40,7 +40,7 @@ func main() {
 	client := pb.NewPingServiceClient(conn)
 
 	ping(client, "hello")
-	pingStream(client, "hello")
+	// pingStream(client, "hello")
 }
 
 func ping(client pb.PingServiceClient, msg string) {

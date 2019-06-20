@@ -7,9 +7,10 @@ import (
 	"io"
 	"log"
 	"net"
+	"os"
 	"time"
 
-	ping "git.rsglab.com/rsg/gke-services/knative-grpc-test/proto"
+	ping "github.com/kwyn/knative-demo/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -17,10 +18,11 @@ import (
 var port = 8080
 
 type pingServer struct {
+	flavor string
 }
 
 func (p *pingServer) Ping(ctx context.Context, req *ping.Request) (*ping.Response, error) {
-	return &ping.Response{Msg: fmt.Sprintf("%s - pong", req.Msg)}, nil
+	return &ping.Response{Msg: fmt.Sprintf("%s - pong (flavor: %s)", req.Msg, p.flavor)}, nil
 }
 
 func (p *pingServer) PingStream(stream ping.PingService_PingStreamServer) error {
@@ -57,7 +59,9 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	pingServer := &pingServer{}
+	flavor := os.Getenv("FLAVOR")
+	fmt.Println("flavor", flavor)
+	pingServer := &pingServer{flavor}
 
 	// The grpcServer is currently configured to serve h2c traffic by default.
 	// To configure credentials or encryption, see: https://grpc.io/docs/guides/auth.html#go

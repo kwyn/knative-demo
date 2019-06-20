@@ -1,0 +1,15 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: grpc-ping
+spec:
+  template:  # template for building Revision
+    spec:
+      containers: # k8s core.v1.Container specification
+      - image: docker.io/kwyn/grpc-ping-go 
+        ports:
+          - name: h2c
+            containerPort: 8080
+        env:
+          - name: FLAVOR
+            value: vanilla
